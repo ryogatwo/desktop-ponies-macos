@@ -1,0 +1,7 @@
+*.saver/
+*.app/
+*.pkg
+*.zip
+*.dmg
+.DS_Store
+notarization-*.json
