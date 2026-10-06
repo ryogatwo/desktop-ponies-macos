@@ -6,9 +6,9 @@ A native macOS screensaver adaptation of [Desktop Ponies](https://github.com/Roo
 
 Version **1.6** supports macOS 11 or later on Apple Silicon and Intel. The Mane Six preset shows exactly one of each character. Custom casts and random selections support up to 40 ponies. Options changes are reloaded by full-screen instances.
 
-## Release status
+## Download
 
-Version 1.6 and its installer app are signed with Developer ID Application. **Apple notarization is pending** because Apple requires the developer account holder to accept an updated agreement. A notarized download will be published after Apple accepts the submission. No unnotarized download is labeled notarized.
+Download the [Apple-notarized version 1.6 installer](https://github.com/ryogatwo/desktop-ponies-macos/releases/tag/v1.6). The installer app and disk image are Developer ID signed, accepted by Apple's notarization service, and have stapled approval tickets. SHA-256 checksums are included with the release.
 
 ## Install
 
