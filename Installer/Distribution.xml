@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <installer-gui-script minSpecVersion="2">
-  <title>Desktop Ponies 1.6</title>
+  <title>Desktop Ponies 1.7</title>
   <welcome file="Welcome.html" mime-type="text/html"/>
   <conclusion file="Conclusion.html" mime-type="text/html"/>
   <options customize="never" require-scripts="false" hostArchitectures="arm64,x86_64"/>
@@ -8,7 +8,7 @@
   <allowed-os-versions><os-version min="11.0"/></allowed-os-versions>
   <choices-outline><line choice="ponies"/></choices-outline>
   <choice id="ponies" title="Desktop Ponies screensaver" visible="false">
-    <pkg-ref id="org.desktopponies.mac.installer.v16"/>
+    <pkg-ref id="org.desktopponies.mac.installer.v17"/>
   </choice>
-  <pkg-ref id="org.desktopponies.mac.installer.v16" version="1.6" onConclusion="none">DesktopPoniesPayload.pkg</pkg-ref>
+  <pkg-ref id="org.desktopponies.mac.installer.v17" version="1.7" onConclusion="none">DesktopPoniesPayload.pkg</pkg-ref>
 </installer-gui-script>

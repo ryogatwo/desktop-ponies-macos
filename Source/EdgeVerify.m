@@ -6,8 +6,8 @@ static double Get(id object, NSString *key) { return [[object valueForKey:key] d
 // Use the real animation loop, with a fixed 50 ms step and no behavior change.
 static void Tick(ScreenSaverView *view) { Put(view,@"lastTick",NSProcessInfo.processInfo.systemUptime-.05); [view animateOneFrame]; }
 static id Actor(NSSize rightSize, NSSize leftSize, NSArray *rightCenter, NSArray *leftCenter) {
-    id actor=[NSClassFromString(@"DP16Actor") new];
-    id right=[NSClassFromString(@"DP16Animation") new], left=[NSClassFromString(@"DP16Animation") new];
+    id actor=[NSClassFromString(@"DP17Actor") new];
+    id right=[NSClassFromString(@"DP17Animation") new], left=[NSClassFromString(@"DP17Animation") new];
     [right setValue:[NSValue valueWithSize:rightSize] forKey:@"size"]; [left setValue:[NSValue valueWithSize:leftSize] forKey:@"size"];
     [actor setValue:right forKey:@"right"]; [actor setValue:left forKey:@"left"];
     [actor setValue:@{@"rc":rightCenter,@"lc":leftCenter} forKey:@"behavior"]; Put(actor,@"remaining",10000); return actor;

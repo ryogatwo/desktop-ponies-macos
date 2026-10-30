@@ -5,15 +5,15 @@
 	<key>CFBundleExecutable</key>
 	<string>Installer</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.desktopponies.mac.installerapp.v16</string>
+	<string>org.desktopponies.mac.installerapp.v17</string>
 	<key>CFBundleName</key>
-	<string>Install Desktop Ponies 1.6</string>
+	<string>Install Desktop Ponies 1.7</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6</string>
+	<string>1.7</string>
 	<key>CFBundleVersion</key>
-	<string>7</string>
+	<string>8</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>11.0</string>
 	<key>NSHighResolutionCapable</key>

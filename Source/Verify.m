@@ -58,6 +58,26 @@ int main(int argc,const char **argv) { @autoreleasepool {
     NSTextField *quantity=nil; for (NSView *subview in cell.subviews) if ([subview isKindOfClass:NSTextField.class]) quantity=(id)subview;
     quantity.integerValue=4; [picker controlTextDidEndEditing:[NSNotification notificationWithName:NSControlTextDidEndEditingNotification object:quantity]];
     if ([picker draftTotal]!=6) return 14;
+    // Presets disable every character-editing control, including newly created cells.
+    NSPopUpButton *modePopup=[picker valueForKey:@"castPopup"];
+    NSDictionary *keptCounts=[[picker valueForKey:@"draftCounts"] copy];
+    for (NSNumber *mode in @[@0,@1,@2,@0,@2]) {
+        BOOL custom=mode.integerValue==2;
+        [modePopup selectItemAtIndex:mode.integerValue]; [picker refreshPicker];
+        for (NSString *key in @[@"pickerTable",@"searchField",@"onlyAdded",@"maneSixButton",@"clearCastButton"])
+            if ([[picker valueForKey:key] isEnabled]!=custom) return 30;
+        if ((table.alphaValue==1.0)!=custom) return 31;
+        NSControl *check=(id)[delegate tableView:table viewForTableColumn:table.tableColumns.firstObject row:0];
+        NSView *copies=[delegate tableView:table viewForTableColumn:table.tableColumns.lastObject row:0];
+        if (check.enabled!=custom) return 32;
+        for (NSControl *control in copies.subviews) if (control.enabled!=custom) return 33;
+        if (![[picker valueForKey:@"draftCounts"] isEqual:keptCounts]) return 34;
+        if (!custom) {
+            quantity.integerValue=19;
+            [picker controlTextDidEndEditing:[NSNotification notificationWithName:NSControlTextDidEndEditingNotification object:quantity]];
+            if (modePopup.indexOfSelectedItem!=mode.integerValue || ![[picker valueForKey:@"draftCounts"] isEqual:keptCounts]) return 35;
+        }
+    }
     [picker saveOptions:nil];
     ScreenSaverView *restored=[[[bundle principalClass] alloc] initWithFrame:NSMakeRect(0,0,1440,900) isPreview:NO];
     [restored setValue:testSettings forKey:@"settings"]; [restored repopulate];

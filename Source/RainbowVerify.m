@@ -27,7 +27,7 @@ int main(int argc,char **argv) { @autoreleasepool {
      for (NSInteger side=0;side<4;side++) {
          if (!idle && [mode isEqual:@"vertical_only"] && side>=2) continue;
          if (!idle && [mode isEqual:@"horizontal_only"] && side<2) continue;
-         id actor=NSClassFromString(@"DPActor") ? [NSClassFromString(@"DPActor") new] : [NSClassFromString(@"DP16Actor") new];
+         id actor=NSClassFromString(@"DPActor") ? [NSClassFromString(@"DPActor") new] : [NSClassFromString(@"DP17Actor") new];
          [actor setValue:pony forKey:@"pony"]; [actor setValue:behavior forKey:@"behavior"]; [actor setValue:[view image:behavior[@"right"]] forKey:@"right"]; [actor setValue:[view image:behavior[@"left"]] forKey:@"left"];
          Put(actor,@"remaining",1000); [actor setValue:@YES forKey:@"facingRight"];
          NSRect bounds=Bounds(actor,viewport,2); double x=viewport.width/2,y=viewport.height/2;
@@ -43,7 +43,7 @@ int main(int argc,char **argv) { @autoreleasepool {
  NSDictionary *zoom=nil; for (NSDictionary *b in pony[@"behaviors"]) if ([b[@"name"] isEqual:@"flyzoom"]) zoom=b;
  for (NSNumber *scale in @[@1,@2,@3]) for (NSNumber *width in @[@800,@1440,@2560]) {
      [settings setDouble:scale.doubleValue forKey:@"scale"]; viewport=NSMakeSize(width.doubleValue,900); [view setFrameSize:viewport]; [view performSelector:@selector(repopulate)];
-     id actor=NSClassFromString(@"DPActor") ? [NSClassFromString(@"DPActor") new] : [NSClassFromString(@"DP16Actor") new];
+     id actor=NSClassFromString(@"DPActor") ? [NSClassFromString(@"DPActor") new] : [NSClassFromString(@"DP17Actor") new];
      [actor setValue:pony forKey:@"pony"]; [actor setValue:zoom forKey:@"behavior"]; [actor setValue:[view image:zoom[@"right"]] forKey:@"right"]; [actor setValue:[view image:zoom[@"left"]] forKey:@"left"]; Put(actor,@"remaining",1000);
      NSRect bounds=Bounds(actor,viewport,scale.doubleValue); Put(actor,@"x",NSMaxX(bounds)-.1); Put(actor,@"y",450); Put(actor,@"vx",2000.0/3); [actor setValue:@YES forKey:@"facingRight"]; [view setValue:[NSMutableArray arrayWithObject:actor] forKey:@"actors"];
      BOOL facing=YES; int lastFlip=-1000; double travel=NSWidth(bounds); double crossingTime=travel/(scale.doubleValue*2000.0/3);

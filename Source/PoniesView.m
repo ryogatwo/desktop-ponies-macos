@@ -2,7 +2,7 @@
 #import <ImageIO/ImageIO.h>
 
 static double RandomUnit(void) { return arc4random_uniform(1000000)/1000000.0; }
-@interface DP16Animation : NSObject
+@interface DP17Animation : NSObject
 @property NSArray<NSImage *> *frames;
 @property NSArray<NSNumber *> *ends;
 @property double duration;
@@ -10,7 +10,7 @@ static double RandomUnit(void) { return arc4random_uniform(1000000)/1000000.0; }
 - (instancetype)initWithPath:(NSString *)path;
 - (NSImage *)frameAt:(double)time once:(BOOL)once;
 @end
-@implementation DP16Animation
+@implementation DP17Animation
 - (instancetype)initWithPath:(NSString *)path {
     if (!(self=[super init])) return nil;
     CGImageSourceRef source=CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:path],NULL);
@@ -34,42 +34,42 @@ static double RandomUnit(void) { return arc4random_uniform(1000000)/1000000.0; }
 }
 @end
 // Anchors in pony.ini are measured from the image's top-left corner.
-static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
+static NSPoint DPImageCenter(DP17Animation *animation, NSArray *center) {
     double x=[center[0] doubleValue], y=[center[1] doubleValue];
     if (x==0 && y==0) return NSMakePoint(animation.size.width/2,animation.size.height/2);
     return NSMakePoint(x,y);
 }
 
-@interface DP16Actor : NSObject
+@interface DP17Actor : NSObject
 @property NSDictionary *pony, *behavior;
-@property DP16Animation *right, *left;
+@property DP17Animation *right, *left;
 @property double x,y,vx,vy,remaining,elapsed,edgeDwell;
 @property BOOL facingRight;
 @end
-@implementation DP16Actor @end
+@implementation DP17Actor @end
 
-@interface DP16OptionsContentView : NSView
+@interface DP17OptionsContentView : NSView
 @end
-@implementation DP16OptionsContentView
+@implementation DP17OptionsContentView
 - (void)drawRect:(NSRect)dirty { [NSColor.windowBackgroundColor setFill]; NSRectFill(self.bounds); [super drawRect:dirty]; }
 @end
 
-@interface DP16PickerButton : NSButton
+@interface DP17PickerButton : NSButton
 @property NSString *ponyID;
 @end
-@implementation DP16PickerButton @end
-@interface DP16PickerStepper : NSStepper
+@implementation DP17PickerButton @end
+@interface DP17PickerStepper : NSStepper
 @property NSString *ponyID;
 @end
-@implementation DP16PickerStepper @end
-@interface DP16QuantityField : NSTextField
+@implementation DP17PickerStepper @end
+@interface DP17QuantityField : NSTextField
 @property NSString *ponyID;
 @end
-@implementation DP16QuantityField @end
+@implementation DP17QuantityField @end
 
-@interface DesktopPoniesView16 : ScreenSaverView <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, NSSearchFieldDelegate>
+@interface DesktopPoniesView17 : ScreenSaverView <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, NSSearchFieldDelegate>
 @property NSArray *catalog;
-@property NSMutableArray<DP16Actor *> *actors;
+@property NSMutableArray<DP17Actor *> *actors;
 @property NSCache *images;
 @property ScreenSaverDefaults *settings;
 @property NSString *resourceRoot;
@@ -82,12 +82,12 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
 @property NSArray *filteredCatalog;
 @property NSTableView *pickerTable;
 @property NSSearchField *searchField;
-@property NSButton *onlyAdded, *applyButton;
+@property NSButton *onlyAdded, *applyButton, *maneSixButton, *clearCastButton;
 @property NSTextField *summaryLabel, *randomLabel, *emptyLabel;
 @property NSCache *thumbnails;
 - (void)repopulate;
 @end
-@implementation DesktopPoniesView16
+@implementation DesktopPoniesView17
 - (instancetype)initWithFrame:(NSRect)frame isPreview:(BOOL)preview {
     if (!(self=[super initWithFrame:frame isPreview:preview])) return nil;
     self.animationTimeInterval=1.0/30.0;
@@ -104,18 +104,18 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
 - (double)spriteScale {
     return MAX(.2,MIN(3.0,[self.settings doubleForKey:@"scale"])) * (self.isPreview ? MAX(.15,MIN(1.0,NSWidth(self.bounds)/1440.0)) : 1.0);
 }
-- (DP16Animation *)image:(NSString *)relative {
-    DP16Animation *a=[self.images objectForKey:relative];
-    if (!a) { a=[[DP16Animation alloc] initWithPath:[self.resourceRoot stringByAppendingPathComponent:relative]]; if (a) [self.images setObject:a forKey:relative]; }
+- (DP17Animation *)image:(NSString *)relative {
+    DP17Animation *a=[self.images objectForKey:relative];
+    if (!a) { a=[[DP17Animation alloc] initWithPath:[self.resourceRoot stringByAppendingPathComponent:relative]]; if (a) [self.images setObject:a forKey:relative]; }
     return a;
 }
-- (void)chooseBehavior:(DP16Actor *)p {
+- (void)chooseBehavior:(DP17Actor *)p {
     NSArray *bs=p.pony[@"behaviors"]; double total=0; for (NSDictionary *b in bs) total+=[b[@"weight"] doubleValue];
     double pick=RandomUnit()*total; NSDictionary *chosen=bs.lastObject;
     for (NSDictionary *b in bs) { pick-=[b[@"weight"] doubleValue]; if (pick<=0) { chosen=b; break; } }
     [self beginBehavior:chosen actor:p];
 }
-- (void)beginBehavior:(NSDictionary *)chosen actor:(DP16Actor *)p {
+- (void)beginBehavior:(NSDictionary *)chosen actor:(DP17Actor *)p {
     p.behavior=chosen; p.right=[self image:chosen[@"right"]]; p.left=[self image:chosen[@"left"]];
     p.elapsed=0; p.remaining=[chosen[@"min"] doubleValue]+RandomUnit()*MAX(0,[chosen[@"max"] doubleValue]-[chosen[@"min"] doubleValue]);
     p.facingRight=RandomUnit()>.5;
@@ -131,7 +131,7 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
     if (fabs(p.vx)<1e-8) p.vx=0;
     if (fabs(p.vy)<1e-8) p.vy=0;
 }
-- (void)releaseActor:(DP16Actor *)p directionX:(NSInteger)dx directionY:(NSInteger)dy {
+- (void)releaseActor:(DP17Actor *)p directionX:(NSInteger)dx directionY:(NSInteger)dy {
     NSMutableArray *candidates=[NSMutableArray array]; double total=0;
     for (NSDictionary *b in p.pony[@"behaviors"]) {
         NSString *mode=b[@"mode"];
@@ -180,7 +180,7 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
         }
     }
     for (NSDictionary *pony in cast) {
-        DP16Actor *p=[DP16Actor new]; p.pony=pony;
+        DP17Actor *p=[DP17Actor new]; p.pony=pony;
         p.x=NSWidth(self.bounds)*(.1+RandomUnit()*.8); p.y=NSHeight(self.bounds)*(.1+RandomUnit()*.8); [self chooseBehavior:p]; [self.actors addObject:p];
     }
     self.loadedSettings=[self settingsSnapshot];
@@ -207,7 +207,7 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
     if (now-self.lastSettingsCheck>=1) [self reloadSettings:NO];
     double dt=self.lastTick ? MIN(.1,MAX(0,now-self.lastTick)) : self.animationTimeInterval; self.lastTick=now;
     double scale=[self spriteScale];
-    for (DP16Actor *p in self.actors) {
+    for (DP17Actor *p in self.actors) {
         p.elapsed+=dt; p.remaining-=dt; if (p.remaining<=0) [self chooseBehavior:p];
         p.x+=p.vx*dt*scale; p.y+=p.vy*dt*scale;
         // Use the union of both facing poses so turning does not move the wall.
@@ -253,9 +253,9 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
     }
     [NSGraphicsContext currentContext].imageInterpolation=NSImageInterpolationNone;
     double scale=[self spriteScale];
-    NSArray *sorted=[self.actors sortedArrayUsingComparator:^NSComparisonResult(DP16Actor *a, DP16Actor *b) { return a.y>b.y?NSOrderedAscending:(a.y<b.y?NSOrderedDescending:NSOrderedSame); }];
-    for (DP16Actor *p in sorted) {
-        DP16Animation *a=p.facingRight?p.right:p.left; if (!a) continue;
+    NSArray *sorted=[self.actors sortedArrayUsingComparator:^NSComparisonResult(DP17Actor *a, DP17Actor *b) { return a.y>b.y?NSOrderedAscending:(a.y<b.y?NSOrderedDescending:NSOrderedSame); }];
+    for (DP17Actor *p in sorted) {
+        DP17Animation *a=p.facingRight?p.right:p.left; if (!a) continue;
         NSPoint center=DPImageCenter(a,p.behavior[p.facingRight?@"rc":@"lc"]);
         NSRect rect=NSMakeRect(p.x-center.x*scale,p.y-(a.size.height-center.y)*scale,a.size.width*scale,a.size.height*scale);
         [[a frameAt:p.elapsed once:[p.behavior[@"once"] boolValue]] drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1 respectFlipped:NO hints:nil];
@@ -272,13 +272,19 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
         BOOL matches=!query.length || [p[@"id"] rangeOfString:query options:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch].location!=NSNotFound || [p[@"name"] rangeOfString:query options:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch].location!=NSNotFound;
         return matches && (self.onlyAdded.state!=NSControlStateValueOn || [self.draftCounts[p[@"id"]] integerValue]>0);
     }]];
-    [self.pickerTable reloadData];
     BOOL custom=self.castPopup.indexOfSelectedItem==2;
+    self.pickerTable.enabled=custom;
+    self.pickerTable.alphaValue=custom?1.0:0.45;
+    self.searchField.enabled=custom;
+    self.onlyAdded.enabled=custom;
+    self.maneSixButton.enabled=custom;
+    self.clearCastButton.enabled=custom;
+    [self.pickerTable reloadData];
     BOOL mane=self.castPopup.indexOfSelectedItem==0;
     if (mane) self.countSlider.doubleValue=6;
     self.countSlider.enabled=self.castPopup.indexOfSelectedItem==1;
     NSInteger total=[self draftTotal];
-    self.summaryLabel.stringValue=[NSString stringWithFormat:@"%ld ponies · %lu characters in your cast · maximum 40",(long)total,(unsigned long)self.draftCounts.count];
+    self.summaryLabel.stringValue=custom?[NSString stringWithFormat:@"%ld ponies · %lu characters in your cast · maximum 40",(long)total,(unsigned long)self.draftCounts.count]:@"Choose My custom cast to edit individual characters. Your cast is saved.";
     self.randomLabel.stringValue=mane?@"6 ponies · one of each Mane Six character":custom?@"Using exact copies from your cast below":[NSString stringWithFormat:@"%ld ponies chosen from this preset",(long)llround(self.countSlider.doubleValue)];
     self.applyButton.enabled=!custom || total>0;
     self.emptyLabel.hidden=self.filteredCatalog.count>0;
@@ -296,8 +302,9 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView { return self.filteredCatalog.count; }
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)column row:(NSInteger)row {
     NSDictionary *pony=self.filteredCatalog[row]; NSString *identifier=pony[@"id"]; NSInteger quantity=[self.draftCounts[identifier] integerValue];
+    BOOL custom=self.castPopup.indexOfSelectedItem==2;
     if ([column.identifier isEqual:@"add"]) {
-        DP16PickerButton *check=[[DP16PickerButton alloc] initWithFrame:NSMakeRect(0,0,60,48)]; check.title=@""; check.buttonType=NSButtonTypeSwitch; check.state=quantity>0?NSControlStateValueOn:NSControlStateValueOff; check.ponyID=identifier; check.target=self; check.action=@selector(togglePony:); [check setAccessibilityLabel:[@"Add " stringByAppendingString:identifier]]; return check;
+        DP17PickerButton *check=[[DP17PickerButton alloc] initWithFrame:NSMakeRect(0,0,60,48)]; check.title=@""; check.buttonType=NSButtonTypeSwitch; check.state=quantity>0?NSControlStateValueOn:NSControlStateValueOff; check.enabled=custom; check.ponyID=identifier; check.target=self; check.action=@selector(togglePony:); [check setAccessibilityLabel:[@"Add " stringByAppendingString:identifier]]; return check;
     }
     if ([column.identifier isEqual:@"pony"]) {
         NSTableCellView *cell=[[NSTableCellView alloc] initWithFrame:NSMakeRect(0,0,column.width,48)];
@@ -305,9 +312,9 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
         NSTextField *name=[NSTextField labelWithString:identifier]; name.frame=NSMakeRect(76,14,column.width-82,22); name.font=[NSFont systemFontOfSize:13]; name.lineBreakMode=NSLineBreakByTruncatingTail; name.toolTip=identifier; cell.textField=name; [cell addSubview:name]; return cell;
     }
     NSView *cell=[[NSView alloc] initWithFrame:NSMakeRect(0,0,column.width,48)];
-    DP16QuantityField *field=[[DP16QuantityField alloc] initWithFrame:NSMakeRect(8,12,44,24)]; field.ponyID=identifier; field.integerValue=quantity; field.alignment=NSTextAlignmentCenter; field.delegate=self;
+    DP17QuantityField *field=[[DP17QuantityField alloc] initWithFrame:NSMakeRect(8,12,44,24)]; field.enabled=custom; field.ponyID=identifier; field.integerValue=quantity; field.alignment=NSTextAlignmentCenter; field.delegate=self;
     NSNumberFormatter *formatter=[NSNumberFormatter new]; formatter.numberStyle=NSNumberFormatterDecimalStyle; formatter.allowsFloats=NO; formatter.minimum=@0; formatter.maximum=@40; field.formatter=formatter; [field setAccessibilityLabel:[@"Copies of " stringByAppendingString:identifier]]; [cell addSubview:field];
-    DP16PickerStepper *stepper=[[DP16PickerStepper alloc] initWithFrame:NSMakeRect(58,10,20,28)]; stepper.ponyID=identifier; stepper.minValue=0; stepper.maxValue=40; stepper.integerValue=quantity; stepper.valueWraps=NO; stepper.target=self; stepper.action=@selector(stepQuantity:); [stepper setAccessibilityLabel:[@"Copies of " stringByAppendingString:identifier]]; [cell addSubview:stepper]; return cell;
+    DP17PickerStepper *stepper=[[DP17PickerStepper alloc] initWithFrame:NSMakeRect(58,10,20,28)]; stepper.enabled=custom; stepper.ponyID=identifier; stepper.minValue=0; stepper.maxValue=40; stepper.integerValue=quantity; stepper.valueWraps=NO; stepper.target=self; stepper.action=@selector(stepQuantity:); [stepper setAccessibilityLabel:[@"Copies of " stringByAppendingString:identifier]]; [cell addSubview:stepper]; return cell;
 }
 - (void)setQuantity:(NSInteger)quantity forPony:(NSString *)identifier {
     // Count limits apply across the entire cast, including characters hidden by search.
@@ -318,10 +325,10 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
     [self.castPopup selectItemAtIndex:2]; [self refreshPicker];
     if (quantity>allowed) self.summaryLabel.stringValue=@"Cast limit reached: 40 ponies. Remove a copy before adding more.";
 }
-- (void)togglePony:(DP16PickerButton *)sender { [self.sheet makeFirstResponder:nil]; [self setQuantity:sender.state==NSControlStateValueOn?1:0 forPony:sender.ponyID]; }
-- (void)stepQuantity:(DP16PickerStepper *)sender { [self.sheet makeFirstResponder:nil]; [self setQuantity:sender.integerValue forPony:sender.ponyID]; }
+- (void)togglePony:(DP17PickerButton *)sender { if (self.castPopup.indexOfSelectedItem!=2) return; [self.sheet makeFirstResponder:nil]; [self setQuantity:sender.state==NSControlStateValueOn?1:0 forPony:sender.ponyID]; }
+- (void)stepQuantity:(DP17PickerStepper *)sender { if (self.castPopup.indexOfSelectedItem!=2) return; [self.sheet makeFirstResponder:nil]; [self setQuantity:sender.integerValue forPony:sender.ponyID]; }
 - (void)controlTextDidEndEditing:(NSNotification *)notification {
-    if ([notification.object isKindOfClass:DP16QuantityField.class]) { DP16QuantityField *field=notification.object; [self setQuantity:field.integerValue forPony:field.ponyID]; }
+    if (self.castPopup.indexOfSelectedItem==2 && [notification.object isKindOfClass:DP17QuantityField.class]) { DP17QuantityField *field=notification.object; [self setQuantity:field.integerValue forPony:field.ponyID]; }
 }
 - (void)controlTextDidChange:(NSNotification *)notification { if (notification.object==self.searchField) [self refreshPicker]; }
 - (void)pickerFilterChanged:(id)sender { [self.sheet makeFirstResponder:nil]; [self refreshPicker]; }
@@ -342,14 +349,14 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
 - (NSWindow *)configureSheet {
     [self.settings synchronize];
     if (!self.sheet) {
-        self.sheet=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,760,650) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO]; self.sheet.title=@"Desktop Ponies 1.6 — Build your cast"; self.sheet.contentView=[[DP16OptionsContentView alloc] initWithFrame:NSMakeRect(0,0,760,650)];
+        self.sheet=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,760,650) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO]; self.sheet.title=@"Desktop Ponies 1.7 — Build your cast"; self.sheet.contentView=[[DP17OptionsContentView alloc] initWithFrame:NSMakeRect(0,0,760,650)];
         [self label:@"Choose a preset or add your own ponies" frame:NSMakeRect(24,605,710,24)].font=[NSFont boldSystemFontOfSize:17];
         self.castPopup=[[NSPopUpButton alloc] initWithFrame:NSMakeRect(24,563,230,28) pullsDown:NO]; [self.castPopup addItemsWithTitles:@[@"Mane Six preset",@"Random from all characters",@"My custom cast"]]; self.castPopup.target=self; self.castPopup.action=@selector(pickerFilterChanged:);
         self.countSlider=[NSSlider sliderWithValue:6 minValue:1 maxValue:40 target:self action:@selector(pickerFilterChanged:)]; self.countSlider.frame=NSMakeRect(275,565,180,24); self.countSlider.numberOfTickMarks=40; self.countSlider.allowsTickMarkValuesOnly=YES;
         self.randomLabel=[self label:@"" frame:NSMakeRect(470,561,266,32)]; self.randomLabel.font=[NSFont systemFontOfSize:11]; self.randomLabel.maximumNumberOfLines=2;
         self.searchField=[[NSSearchField alloc] initWithFrame:NSMakeRect(24,515,450,28)]; self.searchField.placeholderString=[NSString stringWithFormat:@"Search %lu characters…",(unsigned long)self.catalog.count]; self.searchField.delegate=self; [self.searchField setAccessibilityLabel:@"Search characters"];
         self.onlyAdded=[NSButton checkboxWithTitle:@"Only added" target:self action:@selector(pickerFilterChanged:)]; self.onlyAdded.frame=NSMakeRect(490,518,115,24);
-        NSButton *mane=[NSButton buttonWithTitle:@"Add Mane Six" target:self action:@selector(maneSixCast:)]; mane.frame=NSMakeRect(610,514,126,30); mane.toolTip=@"Add any missing Mane Six characters while keeping your existing cast.";
+        NSButton *mane=[NSButton buttonWithTitle:@"Add Mane Six" target:self action:@selector(maneSixCast:)]; self.maneSixButton=mane; mane.frame=NSMakeRect(610,514,126,30); mane.toolTip=@"Add any missing Mane Six characters while keeping your existing cast.";
         NSScrollView *scroll=[[NSScrollView alloc] initWithFrame:NSMakeRect(24,164,712,340)]; scroll.borderType=NSBezelBorder; scroll.hasVerticalScroller=YES; scroll.autohidesScrollers=YES;
         self.pickerTable=[[NSTableView alloc] initWithFrame:scroll.bounds]; self.pickerTable.rowHeight=48; self.pickerTable.intercellSpacing=NSMakeSize(0,0); self.pickerTable.usesAlternatingRowBackgroundColors=YES; self.pickerTable.allowsColumnReordering=NO; self.pickerTable.selectionHighlightStyle=NSTableViewSelectionHighlightStyleNone; self.pickerTable.dataSource=self; self.pickerTable.delegate=self;
         NSArray *ids=@[@"add",@"pony",@"copies"], *titles=@[@"Add",@"Character",@"Copies"], *widths=@[@60,@540,@94];
@@ -357,7 +364,7 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
         scroll.documentView=self.pickerTable; [self.sheet.contentView addSubview:scroll];
         self.emptyLabel=[self label:@"" frame:NSMakeRect(85,300,590,30)]; self.emptyLabel.alignment=NSTextAlignmentCenter; self.emptyLabel.textColor=NSColor.secondaryLabelColor;
         self.summaryLabel=[self label:@"" frame:NSMakeRect(24,131,568,24)]; self.summaryLabel.font=[NSFont systemFontOfSize:12];
-        NSButton *clear=[NSButton buttonWithTitle:@"Clear cast" target:self action:@selector(clearCast:)]; clear.frame=NSMakeRect(624,129,112,28);
+        NSButton *clear=[NSButton buttonWithTitle:@"Clear cast" target:self action:@selector(clearCast:)]; self.clearCastButton=clear; clear.frame=NSMakeRect(624,129,112,28);
         [self label:@"Sprite size" frame:NSMakeRect(24,89,76,24)]; self.sizeSlider=[NSSlider sliderWithValue:2 minValue:.5 maxValue:3 target:nil action:nil]; self.sizeSlider.frame=NSMakeRect(103,90,190,24);
         [self label:@"Background" frame:NSMakeRect(333,89,90,24)]; self.backgroundPopup=[[NSPopUpButton alloc] initWithFrame:NSMakeRect(425,86,170,28) pullsDown:NO]; [self.backgroundPopup addItemsWithTitles:@[@"Black",@"Twilight",@"Daylight"]];
         NSTextField *credit=[self label:@"Artwork: Desktop Ponies contributors · CC BY-NC-SA 3.0" frame:NSMakeRect(24,24,480,20)]; credit.font=[NSFont systemFontOfSize:10]; credit.textColor=NSColor.secondaryLabelColor;
@@ -369,7 +376,7 @@ static NSPoint DPImageCenter(DP16Animation *animation, NSArray *center) {
     // Each presentation starts from saved values; Cancel discards the previous draft.
     self.draftCounts=[NSMutableDictionary dictionary]; NSDictionary *saved=[self.settings dictionaryForKey:@"customCounts"];
     for (NSDictionary *p in self.catalog) { NSInteger n=MAX(0,MIN(40,[saved[p[@"id"]] integerValue])); n=MIN(n,40-[self draftTotal]); if (n) self.draftCounts[p[@"id"]]=@(n); }
-    if (!saved) for (DP16Actor *a in self.actors) self.draftCounts[a.pony[@"id"]]=@([self.draftCounts[a.pony[@"id"]] integerValue]+1);
+    if (!saved) for (DP17Actor *a in self.actors) self.draftCounts[a.pony[@"id"]]=@([self.draftCounts[a.pony[@"id"]] integerValue]+1);
     [self.castPopup selectItemAtIndex:MAX(0,MIN(2,[self.settings integerForKey:@"cast"]))];
     self.countSlider.doubleValue=MAX(1,MIN(40,[self.settings integerForKey:@"count"])); self.sizeSlider.doubleValue=[self.settings doubleForKey:@"scale"];
     [self.backgroundPopup selectItemAtIndex:MAX(0,MIN(2,[self.settings integerForKey:@"background"]))]; self.searchField.stringValue=@""; self.onlyAdded.state=NSControlStateValueOff; [self refreshPicker]; return self.sheet;

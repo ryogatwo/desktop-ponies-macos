@@ -4,17 +4,25 @@ A native macOS screensaver adaptation of [Desktop Ponies](https://github.com/Roo
 
 ![Desktop Ponies preview](Preview.png)
 
-Version **1.6** supports macOS 11 or later on Apple Silicon and Intel. The Mane Six preset shows exactly one of each character. Custom casts and random selections support up to 40 ponies. Options changes are reloaded by full-screen instances.
+Version **1.7** supports macOS 11 or later on Apple Silicon and Intel. The Mane Six preset shows exactly one of each character. Custom casts and random selections support up to 40 ponies. Options changes are reloaded by full-screen instances. Character selection, copy counts, search, and cast editing buttons are grayed out for presets and enabled for My custom cast. Switching modes preserves your custom selections.
 
 ## Download
 
-Download the [Apple-notarized version 1.6 installer](https://github.com/ryogatwo/desktop-ponies-macos/releases/tag/v1.6). The installer app and disk image are Developer ID signed, accepted by Apple's notarization service, and have stapled approval tickets. SHA-256 checksums are included with the release.
+Download the [Apple-notarized version 1.7 installer](https://github.com/ryogatwo/desktop-ponies-macos/releases/tag/v1.7). The installer app and disk image are Developer ID signed, accepted by Apple's notarization service, and have stapled approval tickets. SHA-256 checksums are included with the release.
 
 ## Install
 
-The release disk image contains **Install Desktop Ponies 1.6.app**. Open the app and click **Install Screensaver**. It installs only for your account in `~/Library/Screen Savers` and preserves your saved settings. Click **Open Screen Saver Settings**, select **Desktop Ponies 1.6**, and open Options to choose your cast.
+The release disk image contains **Install Desktop Ponies 1.7.app**. Open the app and click **Install Screensaver**. It installs only for your account in `~/Library/Screen Savers` and preserves your saved settings. Click **Open Screen Saver Settings**, select **Desktop Ponies 1.7**, and open Options to choose your cast.
 
-Older versions may remain installed. Select 1.6 to use this release. To uninstall, remove `Desktop Ponies 1.6.saver` from your account's Screen Savers folder.
+Older versions may remain installed. Select 1.7 to use this release. To uninstall, remove `Desktop Ponies 1.7.saver` from your account's Screen Savers folder.
+
+## Picker modes
+
+The character picker is disabled for presets and enabled for My custom cast. Your custom selections are kept when switching modes.
+
+![Preset picker disabled](Picker-Preset.png)
+
+![Custom picker enabled](Picker.png)
 
 ## Build
 
@@ -33,9 +41,9 @@ An optional conventional `.pkg` installer can be built with `bash build-installe
 
 ```sh
 xcrun clang -fobjc-arc -O1 -framework Cocoa -framework ScreenSaver -framework ImageIO Source/Verify.m -o /tmp/ponies-verify
-/tmp/ponies-verify "$PWD/Desktop Ponies 1.6.saver"
+/tmp/ponies-verify "$PWD/Desktop Ponies 1.7.saver"
 xcrun clang -fobjc-arc -O1 -framework Cocoa -framework ScreenSaver Source/SettingsVerify.m -o /tmp/ponies-settings-verify
-/tmp/ponies-settings-verify "$PWD/Desktop Ponies 1.6.saver"
+/tmp/ponies-settings-verify "$PWD/Desktop Ponies 1.7.saver"
 ```
 
 Additional edge and Rainbow Dash regression checks are in `Source/EdgeVerify.m` and `Source/RainbowVerify.m`. Compile them with Cocoa and ScreenSaver frameworks. Native validation covers picker behavior, all 1970 referenced assets, 2000 behavior transitions, full-size and thumbnail rendering, edge stability, and cross-process settings reloads. Intel compilation is verified; native runtime checks were performed on Apple Silicon.
@@ -43,7 +51,7 @@ Additional edge and Rainbow Dash regression checks are in `Source/EdgeVerify.m` 
 The installer supports a test-only command that copies into a disposable directory without changing your actual installation:
 
 ```sh
-'Install Desktop Ponies 1.6.app/Contents/MacOS/Installer' --test-install 'Desktop Ponies 1.6.saver' /tmp/ponies-install-test
+'Install Desktop Ponies 1.7.app/Contents/MacOS/Installer' --test-install 'Desktop Ponies 1.7.saver' /tmp/ponies-install-test
 ```
 
 ## Scope and credits

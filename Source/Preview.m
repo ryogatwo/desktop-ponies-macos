@@ -7,7 +7,7 @@
 @end
 @implementation PreviewDelegate
 - (void)applicationDidFinishLaunching:(NSNotification *)note {
-    NSString *path=[NSBundle.mainBundle.bundlePath.stringByDeletingLastPathComponent stringByAppendingPathComponent:@"Desktop Ponies 1.6.saver"];
+    NSString *path=[NSBundle.mainBundle.bundlePath.stringByDeletingLastPathComponent stringByAppendingPathComponent:@"Desktop Ponies 1.7.saver"];
     NSBundle *bundle=[NSBundle bundleWithPath:path]; NSError *error=nil;
     if (![bundle loadAndReturnError:&error]) { NSLog(@"%@",error); [NSApp terminate:nil]; return; }
     self.window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,1100,700) styleMask:NSWindowStyleMaskTitled|NSWindowStyleMaskClosable|NSWindowStyleMaskResizable|NSWindowStyleMaskMiniaturizable backing:NSBackingStoreBuffered defer:NO];
