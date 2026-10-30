@@ -26,5 +26,5 @@ xcrun notarytool submit "$release_dmg" --keychain-profile "$NOTARY_KEYCHAIN_PROF
 xcrun stapler staple "$release_dmg"
 xcrun stapler validate "$release_dmg"
 spctl --assess --type open --context context:primary-signature --verbose=2 "$release_dmg"
-(cd "$(dirname "$release_dmg")" && shasum -a 256 "$(basename "$release_dmg")") > '../Desktop.Ponies.1.7.Installer.sha256' 
+(cd "$(dirname "$release_dmg")" && shasum -a 256 "$(basename "$release_dmg")") > '../Desktop.Ponies.1.7.Installer.sha256'
 echo 'Accepted by Apple; tickets stapled and validated. The disk image is ready to publish.'
